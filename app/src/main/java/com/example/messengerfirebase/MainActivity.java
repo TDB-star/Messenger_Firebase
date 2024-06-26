@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -21,7 +22,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
 public class MainActivity extends AppCompatActivity {
-    
+
     private EditText editTextEmail;
     private EditText editTextPassword;
     private Button buttonLogin;
@@ -90,11 +91,9 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onChanged(FirebaseUser firebaseUser) {
                 if (firebaseUser != null) {
-                    Toast.makeText(
-                            MainActivity.this,
-                            "User is authorized",
-                            Toast.LENGTH_SHORT)
-                            .show();
+                    Intent intent = UsersActivity.newIntent(MainActivity.this);
+                    startActivity(intent);
+                    finish();
                 }
             }
         });
@@ -106,5 +105,9 @@ public class MainActivity extends AppCompatActivity {
         buttonLogin = findViewById(R.id.buttonLogin);
         textViewForgotPassword = findViewById(R.id.textViewForgotPassword);
         textViewRegister = findViewById(R.id.textViewRegister);
+    }
+
+    public static Intent newIntent(Context context) {
+        return new Intent(context, MainActivity.class);
     }
 }
