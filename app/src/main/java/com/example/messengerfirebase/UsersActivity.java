@@ -4,6 +4,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Context;
 import android.content.Intent;
@@ -13,16 +14,28 @@ import android.view.MenuItem;
 
 import com.google.firebase.auth.FirebaseUser;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Random;
+
 public class UsersActivity extends AppCompatActivity {
 
     private UsersViewModel viewModel;
+    private RecyclerView usersRecyclerView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_users);
+        
+        usersRecyclerView = findViewById(R.id.recyclerViewUsers);
         viewModel = new ViewModelProvider(this).get(UsersViewModel.class);
+
+        UsersAdapter usersAdapter = new UsersAdapter();
+        usersRecyclerView.setAdapter(usersAdapter);
+
         observeViewModel();
+
     }
 
     private void observeViewModel() {
