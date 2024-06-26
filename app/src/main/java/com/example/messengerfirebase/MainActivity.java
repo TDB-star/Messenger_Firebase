@@ -49,6 +49,9 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 // todo launch intent forgot password screen
+                String email = editTextEmail.getText().toString().trim();
+                Intent intent = ForgotPasswordActivity.newIntent(MainActivity.this, email);
+                startActivity(intent);
             }
         });
 
