@@ -3,6 +3,7 @@ package com.example.messengerfirebase;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -55,6 +56,8 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 // todo launch intent register screen
+                Intent intent = RegistrationActivity.newIntent(MainActivity.this);
+                startActivity(intent);
             }
         });
     }
