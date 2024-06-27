@@ -10,10 +10,16 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 public class RegistrationViewModel extends ViewModel {
 
     private FirebaseAuth auth;
+    private String databaseUrl = "https://messanger-8a07b-default-rtdb.europe-west1.firebasedatabase.app/";
+    private FirebaseDatabase firebaseDatabase;
+    private DatabaseReference usersRef;
+
     private MutableLiveData<FirebaseUser> user = new MutableLiveData<>();
     private MutableLiveData<String> error = new MutableLiveData<>();
 
@@ -36,6 +42,8 @@ public class RegistrationViewModel extends ViewModel {
                 }
             }
         });
+        firebaseDatabase = FirebaseDatabase.getInstance(databaseUrl);
+        usersRef = firebaseDatabase.getReference("Users");
     }
 
     public void signUp(String email,
@@ -45,12 +53,25 @@ public class RegistrationViewModel extends ViewModel {
                        int age) {
 
         auth.createUserWithEmailAndPassword(email, password)
+                .addOnSuccessListener(new OnSuccessListener<AuthResult>() {
+                    @Override
+                    public void onSuccess(AuthResult authResult) {
+                    // todo save user to firebase database
+                        String userUid = authResult.getUser().getUid();
+                        if (authResult.getUser() == null) {
+                            return;
+                        }
+
+                        User user = new User(userUid, name, lastName, age, false);
+                        usersRef.child(userUid).setValue(user);
+                    }
+                })
                 .addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception errorMessage) {
-                error.setValue(errorMessage.getMessage());
-            }
-        });
+                    @Override
+                    public void onFailure(@NonNull Exception errorMessage) {
+                        error.setValue(errorMessage.getMessage());
+                    }
+                });
 
     }
 }
